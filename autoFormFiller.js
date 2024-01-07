@@ -38,29 +38,17 @@ function _waitForElm(selector) {
     });
 }
 
-async function autoFormFiller(formData) {
-    // Using duplicate of waitForElm bacause of puupeter issue:  Protocol error (Runtime.evaluate): Promise was collected.
-    async function waitForElm(selector) {
-        return new Promise(resolve => {
-            if (document.querySelector(selector)) {
-                return resolve(document.querySelector(selector));
-            }
-            const observer = new MutationObserver(mutations => {
-                if (document.querySelector(selector)) {
-                    resolve(document.querySelector(selector));
-                    observer.disconnect();
-                }
-            });
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        });
-    }
+async function autoFormFiller(formData, waitForElmClone) {
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    const waitForElm = waitForElmClone
+
     const { userName, userEmail, userPhone, userCitizenship, userPassportNumber, userJmbg } = formData
 
     const selectLocation = await waitForElm("#label1 > button")
     selectLocation.click()
+
+    await new Promise(resolve => setTimeout(resolve, 550));
 
     const serbiaLocationOption = await waitForElm('#modal2 > div > div > div.modal-body > div:nth-child(80) > label')
     serbiaLocationOption.click()
@@ -113,7 +101,7 @@ const autoFormFiller = ${autoFormFiller.toString()}
 const waitForElm = ${_waitForElm.toString()}
 waitForElm('body h1').then((elm) => {
     console.log('Element is ready');
-    autoFormFiller(${JSON.stringify(FormData)})
+    autoFormFiller(${JSON.stringify(FormData)}, ${_waitForElm.toString()})
 });
 `
 
