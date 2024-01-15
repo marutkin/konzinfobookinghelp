@@ -48,10 +48,21 @@ async function autoFormFiller(formData, waitForElmClone) {
     const selectLocation = await waitForElm("#label1 > button")
     selectLocation.click()
 
-    await new Promise(resolve => setTimeout(resolve, 550));
+    await waitForElm('#modal2 > div > div > div.modal-body')
+    await waitForElm('#modal2 > div > div > div.modal-body > div:nth-child(81) > label')
 
-    const serbiaLocationOption = await waitForElm('#modal2 > div > div > div.modal-body > div:nth-child(80) > label')
-    serbiaLocationOption.click()
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const [serbiaLocationOption] = Array.from(
+        document.querySelectorAll('label'),
+    ).filter(element => element.textContent.includes('Serbia - Belgrade'));
+
+    if (serbiaLocationOption) {
+        serbiaLocationOption.click()
+    } else {
+        const serbiaLocationOptionAlt = await waitForElm("#modal2 > div > div > div.modal-body > div:nth-child(81) > label")
+        serbiaLocationOptionAlt.click()
+    }
 
     const selectApplication = await waitForElm('#label3 > button')
     selectApplication.click()
@@ -74,7 +85,7 @@ async function autoFormFiller(formData, waitForElmClone) {
 
     const concern1 = await waitForElm('#foglalasi-adatok > div.form-group.row.mb-3 > div.col-md-8 > div.form-group.form-check > label')
     const concern2 = await waitForElm('#foglalasi-adatok > div:nth-child(14) > div.col-md-8 > div.form-group.form-check > label')
-    
+
     concern1.click()
     concern2.click()
 }
