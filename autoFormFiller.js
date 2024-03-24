@@ -1,5 +1,8 @@
 function simulateTyping(targetElement, text) {
-    for (let i = 0; i < text.length; i++) {
+    if(!text) {
+      alert('ENV file is not provided, no PHI text found!')
+    }
+    for (let i = 0; i < text?.length; i++) {
         setTimeout(() => {
             const char = text[i];
             const event = new KeyboardEvent('keypress', {
@@ -39,12 +42,24 @@ function _waitForElm(selector) {
 }
 
 async function autoFormFiller(formData, waitForElmClone) {
+    // Helper for specific text cases.
+    function findDOMNodeByContent(content) {
+        var allNodes = document.querySelectorAll("*");
+        for (var i = 0; i < allNodes.length; i++) {
+            var nodeText = allNodes[i].innerText || allNodes[i].textContent;
+            if (nodeText && nodeText.trim() === content) {
+                return allNodes[i];
+            }
+        }
+        return null;
+    }
     await new Promise(resolve => setTimeout(resolve, 300));
 
     const waitForElm = waitForElmClone
 
     const { userName, userEmail, userPhone, userCitizenship, userPassportNumber, userJmbg } = formData
 
+    // Modal (Location) open.
     const selectLocation = await waitForElm("#label1 > button")
     selectLocation.click()
 
@@ -64,17 +79,23 @@ async function autoFormFiller(formData, waitForElmClone) {
         serbiaLocationOptionAlt.click()
     }
 
+    // Modal (Application) open.
     const selectApplication = await waitForElm('#label3 > button')
     selectApplication.click()
 
-    const shortTermVisaOption = await waitForElm('#modalCases > div > div > div.modal-body > div:nth-child(46) > label')
-    shortTermVisaOption.click()
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const shortTermVisaOption = findDOMNodeByContent('Visa application (short term; schengen -C)')
+    shortTermVisaOption.children[0].click()
 
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const saveApplicationBtn = await waitForElm('#modalCases > div > div > div.modal-footer.bg-light > button.btn.btn-success')
     saveApplicationBtn.click()
 
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    console.warn('Inserting PHI data...')
     // Inputs
     simulateTyping(document.querySelector("#label4"), userName);
     simulateTyping(document.querySelector("#label10"), userEmail);
