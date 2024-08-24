@@ -84,13 +84,16 @@ async function autoFormFiller(formData, waitForElmClone) {
     selectApplication.click()
 
     await new Promise(resolve => setTimeout(resolve, 500));
+    const shortTermVisaOption = findDOMNodeByContent("Visa application (Schengen visa- type 'C')")
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    const shortTermVisaOption = findDOMNodeByContent('Visa application (short term; schengen -C)')
     shortTermVisaOption.children[0].click()
 
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const saveApplicationBtn = await waitForElm('#modalCases > div > div > div.modal-footer.bg-light > button.btn.btn-success')
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     saveApplicationBtn.click()
 
     await new Promise(resolve => setTimeout(resolve, 500));
