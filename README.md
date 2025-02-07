@@ -9,4 +9,4 @@ How to start:
 
     2.1 For Windows start `viza.bat` file.
 
-    2.2 For Unix go to terminal and run: `npm i && node --env-file=.env app.js`
+    2.2 For Unix go to terminal and run: `npm i && node --env-file=.env index.js`

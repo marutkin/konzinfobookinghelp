@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const { scriptsString } = require('./autoFormFiller.js');
+const { scriptsString } = require('./form/index.js');
 
 async function runScript() {
     // Launch a headless browser
@@ -15,16 +15,15 @@ async function runScript() {
     // Open a new page
     const page = await browser.newPage();
 
-    // Navigate to a specific URL
-    const targetUrl = 'https://konzinfobooking.mfa.gov.hu/'; // Replace with your desired URL
+    // Navigate
+    const targetUrl = 'https://konzinfobooking.mfa.gov.hu/';
     await page.goto(targetUrl);
 
+    // Run the script
     if (!scriptsString) {
-        throw new Error('No script to use! autoFormFiller not found!')
+        throw new Error('No script to use! fillInFormWith not found!')
     }
-
     await page.evaluate(scriptsString);
 }
 
-// Run the script
 runScript();
